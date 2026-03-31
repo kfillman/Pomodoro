@@ -75,29 +75,38 @@ button:hover {
   font-size: 1.1rem;
 }
 
-/* MODE BUTTONS */
+/* MODE BUTTON CONTAINER */
 .mode-buttons {
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
 }
 
+/* DEFAULT (CREAM BUTTONS) */
 .mode-buttons button {
   flex: 1;
-  padding: 8px;
+  padding: 10px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
-  background: #eee;
-  color: #4b0082;
+  background: #fff5e6; /* cream */
+  color: #4b0082; /* purple text */
   font-weight: bold;
-  transition: 0.2s;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* ACTIVE BUTTON */
+/* HOVER (SOFT PINK) */
+.mode-buttons button:hover {
+  background: #ffe4ec; /* light pink */
+}
+
+/* ACTIVE (PURPLE HIGHLIGHT) */
 .mode-buttons button.active {
-  background: #ff1493;
-  color: white;
+  background: #4b0082; /* purple */
+  color: #fff5e6; /* cream text */
+  box-shadow: 0 6px 15px rgba(75, 0, 130, 0.3);
+  transform: translateY(-2px);
 }
 
 /* HOVER */
