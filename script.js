@@ -5,7 +5,12 @@ let longBreak = 15 * 60;
 
 let time = workTime;
 let interval = null;
-let mode = "work";
+let mode = "work"; // current mode
+
+// --------------------- SESSION SEQUENCE ---------------------
+// Standard Pomodoro cycle: work, short, work, short, work, long
+const pomodoroSequence = ["work", "short", "work", "short", "work", "long"];
+let sessionIndex = 0; // track position in sequence
 
 // --------------------- STATS ---------------------
 let workCount = 0, shortCount = 0, longCount = 0;
@@ -21,14 +26,18 @@ function updateDisplay() {
 
   document.getElementById("timer").textContent =
     `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+  
+  document.getElementById("mode").textContent = `Mode: ${mode.toUpperCase()}`;
+  
+  // Update Next Mode indicator
+  document.getElementById("nextMode").textContent = `Next: ${pomodoroSequence[(sessionIndex + 1) % pomodoroSequence.length].toUpperCase()}`;
 
-  document.getElementById("mode").textContent =
-    `Mode: ${mode.toUpperCase()}`;
-
+  // Total stats
   document.getElementById("workCount").textContent = workCount;
   document.getElementById("shortCount").textContent = shortCount;
   document.getElementById("longCount").textContent = longCount;
 
+  // This session stats
   document.getElementById("sessionWork").textContent = sessionWork;
   document.getElementById("sessionShort").textContent = sessionShort;
   document.getElementById("sessionLong").textContent = sessionLong;
@@ -48,8 +57,8 @@ function startTimer() {
 
       alarm.play();
       handleCounts();
-      switchMode();
-      startTimer();
+      nextSession();
+      startTimer(); // auto-start next
     }
   }, 1000);
 }
@@ -63,8 +72,10 @@ function resetTimer() {
   clearInterval(interval);
   interval = null;
 
-  mode = "work";
-  time = workTime;
+  // Reset session
+  sessionIndex = 0;
+  mode = pomodoroSequence[sessionIndex];
+  time = getTimeForMode(mode);
 
   workCount = shortCount = longCount = 0;
   sessionWork = sessionShort = sessionLong = 0;
@@ -79,7 +90,7 @@ function nextTimer() {
 
   alarm.play();
   handleCounts();
-  switchMode();
+  nextSession();
   startTimer();
 }
 
@@ -89,10 +100,10 @@ function changeMode(selectedMode) {
   interval = null;
 
   mode = selectedMode;
+  time = getTimeForMode(mode);
 
-  if (mode === "work") time = workTime;
-  else if (mode === "short") time = shortBreak;
-  else if (mode === "long") time = longBreak;
+  // Adjust sessionIndex to match selected mode
+  sessionIndex = pomodoroSequence.findIndex(m => m === mode);
 
   updateActiveButton();
   updateDisplay();
@@ -108,26 +119,31 @@ function updateActiveButton() {
   else if (mode === "long") document.getElementById("longBtn").classList.add("active");
 }
 
-// --------------------- COUNTS & SWITCH ---------------------
+// --------------------- COUNTS ---------------------
 function handleCounts() {
   if (mode === "work") { workCount++; sessionWork++; }
   else if (mode === "short") { shortCount++; sessionShort++; }
   else { 
-    longCount++; sessionLong++; 
-    sessionWork = sessionShort = sessionLong = 0; // reset session stats
+    longCount++; sessionLong++;
+    // Reset this session stats after long break
+    sessionWork = sessionShort = sessionLong = 0;
   }
 }
 
-function switchMode() {
-  if (mode === "work") {
-    if (workCount % 4 === 0) { mode = "long"; time = longBreak; }
-    else { mode = "short"; time = shortBreak; }
-  } else {
-    mode = "work"; time = workTime;
-  }
+// --------------------- SESSION LOGIC ---------------------
+function nextSession() {
+  sessionIndex = (sessionIndex + 1) % pomodoroSequence.length;
+  mode = pomodoroSequence[sessionIndex];
+  time = getTimeForMode(mode);
 
   updateActiveButton();
   updateDisplay();
+}
+
+function getTimeForMode(mode) {
+  if (mode === "work") return workTime;
+  if (mode === "short") return shortBreak;
+  if (mode === "long") return longBreak;
 }
 
 // --------------------- INITIALIZE ---------------------
