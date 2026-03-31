@@ -74,3 +74,48 @@ button:hover {
   margin: 10px 0;
   font-size: 1.1rem;
 }
+
+/* MODE BUTTONS */
+.mode-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.mode-buttons button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #eee;
+  color: #4b0082;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+/* ACTIVE BUTTON */
+.mode-buttons button.active {
+  background: #ff1493;
+  color: white;
+}
+
+/* HOVER */
+.mode-buttons button:hover {
+  background: #ff69b4;
+  color: white;
+}
+
+/* PRETTY DIVIDER */
+.divider {
+  height: 2px;
+  margin: 20px 0;
+  background: linear-gradient(
+    to right,
+    transparent,
+    #ff1493,
+    #4b0082,
+    transparent
+  );
+  border-radius: 5px;
+}
