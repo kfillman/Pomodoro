@@ -149,4 +149,21 @@ function switchMode() {
   updateDisplay();
 }
 
+function nextTimer() {
+  clearInterval(interval);
+  interval = null;
+
+  // Play alarm
+  alarm.play();
+
+  // Update counts as if the timer finished
+  handleCounts();
+
+  // Switch to the next mode
+  switchMode();
+
+  // Auto-start next timer if you want, otherwise leave paused
+  startTimer();
+}
+
 updateDisplay();
