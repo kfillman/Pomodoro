@@ -4,13 +4,17 @@ let longBreak = 15 * 60;
 
 let time = workTime;
 let interval = null;
-
 let mode = "work";
 
-// Counters
+// TOTAL counters
 let workCount = 0;
 let shortCount = 0;
 let longCount = 0;
+
+// SESSION counters (reset after long break)
+let sessionWork = 0;
+let sessionShort = 0;
+let sessionLong = 0;
 
 const alarm = new Audio("alarm.mp3");
 
@@ -24,9 +28,15 @@ function updateDisplay() {
   document.getElementById("mode").textContent =
     `Mode: ${mode.toUpperCase()}`;
 
+  // Total stats
   document.getElementById("workCount").textContent = workCount;
   document.getElementById("shortCount").textContent = shortCount;
   document.getElementById("longCount").textContent = longCount;
+
+  // Session stats
+  document.getElementById("sessionWork").textContent = sessionWork;
+  document.getElementById("sessionShort").textContent = sessionShort;
+  document.getElementById("sessionLong").textContent = sessionLong;
 }
 
 function startTimer() {
@@ -42,6 +52,7 @@ function startTimer() {
 
       alarm.play();
 
+      handleCounts();
       switchMode();
       startTimer();
     }
@@ -60,24 +71,60 @@ function resetTimer() {
   mode = "work";
   time = workTime;
 
+  // Reset ALL stats
   workCount = 0;
   shortCount = 0;
   longCount = 0;
 
+  sessionWork = 0;
+  sessionShort = 0;
+  sessionLong = 0;
+
+  document.getElementById("modeSelect").value = "work";
+
   updateDisplay();
+}
+
+function changeMode() {
+  const selected = document.getElementById("modeSelect").value;
+
+  clearInterval(interval);
+  interval = null;
+
+  mode = selected;
+
+  if (mode === "work") time = workTime;
+  if (mode === "short") time = shortBreak;
+  if (mode === "long") time = longBreak;
+
+  updateDisplay();
+}
+
+function handleCounts() {
+  if (mode === "work") {
+    workCount++;
+    sessionWork++;
+  } else if (mode === "short") {
+    shortCount++;
+    sessionShort++;
+  } else if (mode === "long") {
+    longCount++;
+    sessionLong++;
+
+    // 🔥 Reset session stats after long break
+    sessionWork = 0;
+    sessionShort = 0;
+    sessionLong = 0;
+  }
 }
 
 function switchMode() {
   if (mode === "work") {
-    workCount++;
-
     if (workCount % 4 === 0) {
       mode = "long";
-      longCount++;
       time = longBreak;
     } else {
       mode = "short";
-      shortCount++;
       time = shortBreak;
     }
   } else {
@@ -85,6 +132,7 @@ function switchMode() {
     time = workTime;
   }
 
+  document.getElementById("modeSelect").value = mode;
   updateDisplay();
 }
 
