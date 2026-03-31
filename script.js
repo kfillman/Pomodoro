@@ -72,15 +72,15 @@ function resetTimer() {
   clearInterval(interval);
   interval = null;
 
-  // Reset session
   sessionIndex = 0;
   mode = pomodoroSequence[sessionIndex];
   time = getTimeForMode(mode);
 
+  // reset stats
   workCount = shortCount = longCount = 0;
   sessionWork = sessionShort = sessionLong = 0;
 
-  updateActiveButton();
+  updateActiveButton(); // highlight initial mode
   updateDisplay();
 }
 
@@ -102,18 +102,20 @@ function changeMode(selectedMode) {
   mode = selectedMode;
   time = getTimeForMode(mode);
 
-  // Adjust sessionIndex to match selected mode
+  // Update sessionIndex to match selected mode
   sessionIndex = pomodoroSequence.findIndex(m => m === mode);
 
-  updateActiveButton();
+  updateActiveButton(); // highlight selected mode
   updateDisplay();
 }
 
 function updateActiveButton() {
+  // Remove active class from all buttons
   document.getElementById("workBtn").classList.remove("active");
   document.getElementById("shortBtn").classList.remove("active");
   document.getElementById("longBtn").classList.remove("active");
 
+  // Add active class to the button that matches the current mode
   if (mode === "work") document.getElementById("workBtn").classList.add("active");
   else if (mode === "short") document.getElementById("shortBtn").classList.add("active");
   else if (mode === "long") document.getElementById("longBtn").classList.add("active");
@@ -136,7 +138,7 @@ function nextSession() {
   mode = pomodoroSequence[sessionIndex];
   time = getTimeForMode(mode);
 
-  updateActiveButton();
+  updateActiveButton(); // highlight current mode button
   updateDisplay();
 }
 
