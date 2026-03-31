@@ -1,51 +1,50 @@
-// --------------------- TIMER SETTINGS ---------------------
+// TIMER SETTINGS
 let workTime = 25 * 60;
 let shortBreak = 5 * 60;
 let longBreak = 15 * 60;
 
 let time = workTime;
 let interval = null;
-let mode = "work"; // current mode
+let mode = "work";
 
-// --------------------- POMODORO SEQUENCE ---------------------
 const pomodoroSequence = ["work", "short", "work", "short", "work", "long"];
 let sessionIndex = 0;
 
-// --------------------- STATS ---------------------
-let workCount = 0, shortCount = 0, longCount = 0; // total stats
+let workCount = 0, shortCount = 0, longCount = 0;
 let sessionWork = 0, sessionShort = 0, sessionLong = 0;
 
-// --------------------- AUDIO ---------------------
 const alarm = new Audio("alarm.mp3");
-
-// --------------------- SESSION CHECKLIST ---------------------
 const sessionLabels = ["Work", "Short Break", "Work", "Short Break", "Work", "Long Break"];
 
+const circle = document.querySelector(".progress-ring__circle");
+const radius = circle.r.baseVal.value;
+const circumference = 2 * Math.PI * radius;
+circle.style.strokeDasharray = `${circumference} ${circumference}`;
+circle.style.strokeDashoffset = circumference;
+
+function setProgress(percent) {
+  const offset = circumference - percent * circumference;
+  circle.style.strokeDashoffset = offset;
+}
+
+// UPDATE SESSION LIST
 function updateSessionList() {
   const list = document.getElementById("sessionList");
   list.innerHTML = "";
   for (let i = 0; i < pomodoroSequence.length; i++) {
-    let done = false;
-    if (pomodoroSequence[i] === "work") done = sessionWork > 0 && sessionWork > i / 2;
-    else if (pomodoroSequence[i] === "short") done = sessionShort > 0 && sessionShort > Math.floor(i/2);
-    else if (pomodoroSequence[i] === "long") done = sessionLong > 0;
-    // smarter check
-    if (i < sessionIndex) done = true;
-
     const li = document.createElement("li");
+    const done = i < sessionIndex;
     li.textContent = `${sessionLabels[i]} ${done ? "✅" : "❌"}`;
     list.appendChild(li);
   }
 }
 
-// --------------------- UPDATE DISPLAY ---------------------
+// UPDATE DISPLAY
 function updateDisplay() {
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
-
   document.getElementById("timer").textContent =
     `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-
   document.getElementById("mode").textContent = `Mode: ${mode.toUpperCase()}`;
 
   const nextIndex = (sessionIndex + 1) % pomodoroSequence.length;
@@ -57,13 +56,17 @@ function updateDisplay() {
 
   updateSessionList();
 
-  // Change background slightly during breaks
-  if (mode === "short") document.body.style.background = "#ffe4ec"; // light hot pink
-  else if (mode === "long") document.body.style.background = "#e6e0ff"; // light purple
-  else document.body.style.background = "#fff5e6"; // cream for work
+  // BACKGROUND COLOR
+  if (mode === "short") document.body.style.background = "#ffe4ec";
+  else if (mode === "long") document.body.style.background = "#e6e0ff";
+  else document.body.style.background = "#fff5e6";
+
+  // CIRCLE PROGRESS
+  const totalTime = getTimeForMode(mode);
+  setProgress(time / totalTime);
 }
 
-// --------------------- TIMER CONTROLS ---------------------
+// TIMER CONTROLS
 function startTimer() {
   if (interval) return;
   interval = setInterval(() => {
@@ -76,7 +79,7 @@ function startTimer() {
       alarm.play();
       handleCounts();
       nextSession();
-      startTimer(); // auto start next
+      startTimer();
     }
   }, 1000);
 }
@@ -107,7 +110,7 @@ function nextTimer() {
   startTimer();
 }
 
-// --------------------- MODE BUTTONS ---------------------
+// MODE BUTTONS
 function changeMode(selectedMode) {
   clearInterval(interval);
   interval = null;
@@ -124,17 +127,17 @@ function updateActiveButton() {
   document.getElementById("longBtn").classList.remove("active");
   if (mode === "work") document.getElementById("workBtn").classList.add("active");
   else if (mode === "short") document.getElementById("shortBtn").classList.add("active");
-  else if (mode === "long") document.getElementById("longBtn").classList.add("active");
+  else document.getElementById("longBtn").classList.add("active");
 }
 
-// --------------------- COUNTS ---------------------
+// COUNTS
 function handleCounts() {
   if (mode === "work") { workCount++; sessionWork++; }
   else if (mode === "short") { shortCount++; sessionShort++; }
   else { longCount++; sessionLong++; sessionWork=0; sessionShort=0; sessionLong=0; }
 }
 
-// --------------------- SESSION LOGIC ---------------------
+// SESSION LOGIC
 function nextSession() {
   sessionIndex = (sessionIndex + 1) % pomodoroSequence.length;
   mode = pomodoroSequence[sessionIndex];
@@ -149,6 +152,6 @@ function getTimeForMode(mode) {
   if (mode === "long") return longBreak;
 }
 
-// --------------------- INITIALIZE ---------------------
+// INITIALIZE
 updateActiveButton();
 updateDisplay();
