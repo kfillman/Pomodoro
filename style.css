@@ -1,12 +1,13 @@
 /* --- LAYOUT --- */
 body {
   font-family: 'Arial', sans-serif;
-  background: #fff5e6; /* cream */
+  background: #fff5e6; /* cream default */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
+  transition: background 0.5s;
 }
 
 .app {
@@ -72,7 +73,7 @@ h1 {
 }
 
 #timer {
-  font-size: 3rem;
+  font-size: 4rem; /* larger timer */
   font-weight: bold;
   margin-bottom: 20px;
   color: #4b0082;
@@ -85,7 +86,7 @@ h1 {
 }
 
 .buttons button {
-  padding: 8px 15px;
+  padding: 10px 15px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -104,13 +105,13 @@ h1 {
   background: #fff5e6; /* cream panel */
   padding: 20px;
   border-radius: 15px;
-  min-width: 200px;
+  min-width: 220px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
 .stats h2 {
   color: #ff1493; /* hot pink */
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .stats p {
@@ -124,4 +125,18 @@ h1 {
   margin: 20px 0;
   background: linear-gradient(to right, transparent, #ff1493, #4b0082, transparent);
   border-radius: 5px;
+}
+
+/* --- SESSION CHECKLIST --- */
+.session-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.session-list li {
+  margin: 5px 0;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
 }
