@@ -1,88 +1,41 @@
+/* --- LAYOUT --- */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #fff5e6; /* cream */
-  color: #4b0082; /* purple */
+  font-family: 'Arial', sans-serif;
+  background: #fff5e6; /* cream background */
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-}
-
-.container {
-  text-align: center;
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-h1 {
-  color: #ff1493; /* hot pink */
-}
-
-#mode {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-#timer {
-  font-size: 5rem;
-  margin: 20px 0;
-  color: #4b0082;
-}
-
-#sessions {
-  margin-bottom: 20px;
-}
-
-button {
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  background: #ff1493;
-  color: white;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #c71585;
+  margin: 0;
 }
 
 .app {
   display: flex;
   gap: 40px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 
-.stats {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  min-width: 200px;
+h1 {
+  margin-bottom: 20px;
+  color: #4b0082; /* purple */
 }
 
-.stats h2 {
-  color: #ff1493;
-  margin-bottom: 15px;
-}
-
-.stats p {
-  margin: 10px 0;
-  font-size: 1.1rem;
-}
-
-/* MODE BUTTON CONTAINER */
+/* --- MODE BUTTONS --- */
 .mode-buttons {
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
 }
 
-/* DEFAULT (CREAM BUTTONS) */
 .mode-buttons button {
   flex: 1;
   padding: 10px;
@@ -90,41 +43,85 @@ button:hover {
   border-radius: 12px;
   cursor: pointer;
   background: #fff5e6; /* cream */
-  color: #4b0082; /* purple text */
+  color: #4b0082;       /* purple text */
   font-weight: bold;
   transition: all 0.2s ease;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* HOVER (SOFT PINK) */
 .mode-buttons button:hover {
-  background: #ffe4ec; /* light pink */
+  background: #ffe4ec; /* hot pink hover */
 }
 
-/* ACTIVE (PURPLE HIGHLIGHT) */
 .mode-buttons button.active {
   background: #4b0082; /* purple */
-  color: #fff5e6; /* cream text */
-  box-shadow: 0 6px 15px rgba(75, 0, 130, 0.3);
+  color: #fff5e6;      /* cream text */
+  box-shadow: 0 6px 15px rgba(75,0,130,0.3);
   transform: translateY(-2px);
 }
 
-/* HOVER */
-.mode-buttons button:hover {
-  background: #ff69b4;
-  color: white;
+.mode-buttons button:active {
+  transform: scale(0.97);
 }
 
-/* PRETTY DIVIDER */
+/* --- TIMER --- */
+#mode {
+  margin: 10px 0;
+  font-size: 1.2rem;
+  color: #ff1493; /* hot pink */
+}
+
+#timer {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #4b0082;
+}
+
+/* --- CONTROL BUTTONS --- */
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.buttons button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #fff5e6; /* cream */
+  color: #4b0082;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.buttons button:hover {
+  background: #ffe4ec; /* pink hover */
+}
+
+/* --- STATS PANEL --- */
+.stats {
+  background: #fff5e6; /* cream panel */
+  padding: 20px;
+  border-radius: 15px;
+  min-width: 200px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.stats h2 {
+  color: #ff1493; /* hot pink */
+  margin-bottom: 15px;
+}
+
+.stats p {
+  margin: 8px 0;
+  font-size: 1.1rem;
+}
+
+/* --- PRETTY DIVIDER --- */
 .divider {
   height: 2px;
   margin: 20px 0;
-  background: linear-gradient(
-    to right,
-    transparent,
-    #ff1493,
-    #4b0082,
-    transparent
-  );
+  background: linear-gradient(to right, transparent, #ff1493, #4b0082, transparent);
   border-radius: 5px;
 }
