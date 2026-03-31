@@ -1,25 +1,18 @@
 // --------------------- TIMER SETTINGS ---------------------
-let workTime = 25 * 60;      // 25 minutes
-let shortBreak = 5 * 60;     // 5 minutes
-let longBreak = 15 * 60;     // 15 minutes
+let workTime = 25 * 60;
+let shortBreak = 5 * 60;
+let longBreak = 15 * 60;
 
-let time = workTime;          // Current timer
+let time = workTime;
 let interval = null;
-let mode = "work";            // Current mode: "work", "short", "long"
+let mode = "work";
 
 // --------------------- STATS ---------------------
-// Total stats (never reset unless reset button)
-let workCount = 0;
-let shortCount = 0;
-let longCount = 0;
-
-// This session stats (reset after long break)
-let sessionWork = 0;
-let sessionShort = 0;
-let sessionLong = 0;
+let workCount = 0, shortCount = 0, longCount = 0;
+let sessionWork = 0, sessionShort = 0, sessionLong = 0;
 
 // --------------------- AUDIO ---------------------
-const alarm = new Audio("alarm.mp3"); // place alarm.mp3 in same folder
+const alarm = new Audio("alarm.mp3");
 
 // --------------------- UPDATE DISPLAY ---------------------
 function updateDisplay() {
@@ -27,50 +20,45 @@ function updateDisplay() {
   const seconds = time % 60;
 
   document.getElementById("timer").textContent =
-    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  
+    `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+
   document.getElementById("mode").textContent =
     `Mode: ${mode.toUpperCase()}`;
 
-  // Total stats
   document.getElementById("workCount").textContent = workCount;
   document.getElementById("shortCount").textContent = shortCount;
   document.getElementById("longCount").textContent = longCount;
 
-  // This session stats
   document.getElementById("sessionWork").textContent = sessionWork;
   document.getElementById("sessionShort").textContent = sessionShort;
   document.getElementById("sessionLong").textContent = sessionLong;
 }
 
-// --------------------- START TIMER ---------------------
+// --------------------- TIMER CONTROLS ---------------------
 function startTimer() {
-  if (interval) return; // Already running
+  if (interval) return;
 
   interval = setInterval(() => {
     if (time > 0) {
       time--;
       updateDisplay();
     } else {
-      // Time's up
       clearInterval(interval);
       interval = null;
 
       alarm.play();
-      handleCounts();   // update stats
-      switchMode();     // move to next session
-      startTimer();     // auto-start next timer
+      handleCounts();
+      switchMode();
+      startTimer();
     }
   }, 1000);
 }
 
-// --------------------- PAUSE TIMER ---------------------
 function pauseTimer() {
   clearInterval(interval);
   interval = null;
 }
 
-// --------------------- RESET TIMER ---------------------
 function resetTimer() {
   clearInterval(interval);
   interval = null;
@@ -78,28 +66,21 @@ function resetTimer() {
   mode = "work";
   time = workTime;
 
-  // Reset all stats
-  workCount = 0;
-  shortCount = 0;
-  longCount = 0;
-
-  sessionWork = 0;
-  sessionShort = 0;
-  sessionLong = 0;
+  workCount = shortCount = longCount = 0;
+  sessionWork = sessionShort = sessionLong = 0;
 
   updateActiveButton();
   updateDisplay();
 }
 
-// --------------------- NEXT TIMER ---------------------
 function nextTimer() {
   clearInterval(interval);
   interval = null;
 
-  alarm.play();        // play alarm
-  handleCounts();      // count as completed
-  switchMode();        // switch to next mode
-  startTimer();        // auto-start next
+  alarm.play();
+  handleCounts();
+  switchMode();
+  startTimer();
 }
 
 // --------------------- MODE BUTTONS ---------------------
@@ -109,7 +90,6 @@ function changeMode(selectedMode) {
 
   mode = selectedMode;
 
-  // Set timer for the selected mode
   if (mode === "work") time = workTime;
   else if (mode === "short") time = shortBreak;
   else if (mode === "long") time = longBreak;
@@ -128,39 +108,22 @@ function updateActiveButton() {
   else if (mode === "long") document.getElementById("longBtn").classList.add("active");
 }
 
-// --------------------- HANDLE COUNTS ---------------------
+// --------------------- COUNTS & SWITCH ---------------------
 function handleCounts() {
-  if (mode === "work") {
-    workCount++;
-    sessionWork++;
-  } else if (mode === "short") {
-    shortCount++;
-    sessionShort++;
-  } else if (mode === "long") {
-    longCount++;
-    sessionLong++;
-
-    // Reset this session stats after long break
-    sessionWork = 0;
-    sessionShort = 0;
-    sessionLong = 0;
+  if (mode === "work") { workCount++; sessionWork++; }
+  else if (mode === "short") { shortCount++; sessionShort++; }
+  else { 
+    longCount++; sessionLong++; 
+    sessionWork = sessionShort = sessionLong = 0; // reset session stats
   }
 }
 
-// --------------------- SWITCH MODE ---------------------
 function switchMode() {
   if (mode === "work") {
-    // Every 4th work session triggers long break
-    if (workCount % 4 === 0) {
-      mode = "long";
-      time = longBreak;
-    } else {
-      mode = "short";
-      time = shortBreak;
-    }
+    if (workCount % 4 === 0) { mode = "long"; time = longBreak; }
+    else { mode = "short"; time = shortBreak; }
   } else {
-    mode = "work";
-    time = workTime;
+    mode = "work"; time = workTime;
   }
 
   updateActiveButton();
