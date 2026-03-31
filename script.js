@@ -7,15 +7,21 @@ let time = workTime;
 let interval = null;
 let mode = "work";
 
+// POMODORO SEQUENCE
 const pomodoroSequence = ["work", "short", "work", "short", "work", "long"];
 let sessionIndex = 0;
 
+// STATS
 let workCount = 0, shortCount = 0, longCount = 0;
-let sessionWork = 0, sessionShort = 0, sessionLong = 0;
 
-const alarm = new Audio("alarm.mp3");
+// SESSION TRACKER
 const sessionLabels = ["Work", "Short Break", "Work", "Short Break", "Work", "Long Break"];
+let completedSessions = Array(pomodoroSequence.length).fill(false);
 
+// AUDIO
+const alarm = new Audio("alarm.mp3");
+
+// CIRCLE
 const circle = document.querySelector(".progress-ring__circle");
 const radius = circle.r.baseVal.value;
 const circumference = 2 * Math.PI * radius;
@@ -31,10 +37,9 @@ function setProgress(percent) {
 function updateSessionList() {
   const list = document.getElementById("sessionList");
   list.innerHTML = "";
-  for (let i = 0; i < pomodoroSequence.length; i++) {
+  for (let i = 0; i < sessionLabels.length; i++) {
     const li = document.createElement("li");
-    const done = i < sessionIndex;
-    li.textContent = `${sessionLabels[i]} ${done ? "✅" : "❌"}`;
+    li.textContent = `${sessionLabels[i]} ${completedSessions[i] ? "✅" : "❌"}`;
     list.appendChild(li);
   }
 }
@@ -64,6 +69,8 @@ function updateDisplay() {
   // CIRCLE PROGRESS
   const totalTime = getTimeForMode(mode);
   setProgress(time / totalTime);
+
+  updateActiveButton();
 }
 
 // TIMER CONTROLS
@@ -77,9 +84,9 @@ function startTimer() {
       clearInterval(interval);
       interval = null;
       alarm.play();
-      handleCounts();
+      completeCurrentSession();
       nextSession();
-      startTimer();
+      startTimer(); // auto start next session
     }
   }, 1000);
 }
@@ -96,8 +103,7 @@ function resetTimer() {
   mode = pomodoroSequence[sessionIndex];
   time = getTimeForMode(mode);
   workCount = shortCount = longCount = 0;
-  sessionWork = sessionShort = sessionLong = 0;
-  updateActiveButton();
+  completedSessions = Array(pomodoroSequence.length).fill(false);
   updateDisplay();
 }
 
@@ -105,9 +111,9 @@ function nextTimer() {
   clearInterval(interval);
   interval = null;
   alarm.play();
-  handleCounts();
+  completeCurrentSession();
   nextSession();
-  startTimer();
+  startTimer(); // auto-start next
 }
 
 // MODE BUTTONS
@@ -117,32 +123,33 @@ function changeMode(selectedMode) {
   mode = selectedMode;
   time = getTimeForMode(mode);
   sessionIndex = pomodoroSequence.findIndex(m => m === mode);
-  updateActiveButton();
   updateDisplay();
 }
 
+// ACTIVE BUTTON HIGHLIGHT
 function updateActiveButton() {
   document.getElementById("workBtn").classList.remove("active");
   document.getElementById("shortBtn").classList.remove("active");
   document.getElementById("longBtn").classList.remove("active");
   if (mode === "work") document.getElementById("workBtn").classList.add("active");
   else if (mode === "short") document.getElementById("shortBtn").classList.add("active");
-  else document.getElementById("longBtn").classList.add("active");
-}
-
-// COUNTS
-function handleCounts() {
-  if (mode === "work") { workCount++; sessionWork++; }
-  else if (mode === "short") { shortCount++; sessionShort++; }
-  else { longCount++; sessionLong++; sessionWork=0; sessionShort=0; sessionLong=0; }
+  else if (mode === "long") document.getElementById("longBtn").classList.add("active");
 }
 
 // SESSION LOGIC
+function completeCurrentSession() {
+  completedSessions[sessionIndex] = true;
+  if (mode === "work") workCount++;
+  else if (mode === "short") shortCount++;
+  else longCount++;
+  // Reset after long break
+  if (mode === "long") completedSessions = Array(pomodoroSequence.length).fill(false);
+}
+
 function nextSession() {
   sessionIndex = (sessionIndex + 1) % pomodoroSequence.length;
   mode = pomodoroSequence[sessionIndex];
   time = getTimeForMode(mode);
-  updateActiveButton();
   updateDisplay();
 }
 
@@ -150,8 +157,8 @@ function getTimeForMode(mode) {
   if (mode === "work") return workTime;
   if (mode === "short") return shortBreak;
   if (mode === "long") return longBreak;
+  return workTime;
 }
 
 // INITIALIZE
-updateActiveButton();
 updateDisplay();
