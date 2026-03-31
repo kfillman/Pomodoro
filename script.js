@@ -5,10 +5,14 @@ let longBreak = 15 * 60;
 let time = workTime;
 let interval = null;
 
-let sessionCount = 0;
-let mode = "work"; // work, short, long
+let mode = "work";
 
-const alarm = new Audio("alarm.mp3"); // add sound file to your folder
+// Counters
+let workCount = 0;
+let shortCount = 0;
+let longCount = 0;
+
+const alarm = new Audio("alarm.mp3");
 
 function updateDisplay() {
   const minutes = Math.floor(time / 60);
@@ -20,8 +24,9 @@ function updateDisplay() {
   document.getElementById("mode").textContent =
     `Mode: ${mode.toUpperCase()}`;
 
-  document.getElementById("sessions").textContent =
-    `Sessions: ${sessionCount}`;
+  document.getElementById("workCount").textContent = workCount;
+  document.getElementById("shortCount").textContent = shortCount;
+  document.getElementById("longCount").textContent = longCount;
 }
 
 function startTimer() {
@@ -38,7 +43,7 @@ function startTimer() {
       alarm.play();
 
       switchMode();
-      startTimer(); // auto-start next session
+      startTimer();
     }
   }, 1000);
 }
@@ -54,20 +59,25 @@ function resetTimer() {
 
   mode = "work";
   time = workTime;
-  sessionCount = 0;
+
+  workCount = 0;
+  shortCount = 0;
+  longCount = 0;
 
   updateDisplay();
 }
 
 function switchMode() {
   if (mode === "work") {
-    sessionCount++;
+    workCount++;
 
-    if (sessionCount % 4 === 0) {
+    if (workCount % 4 === 0) {
       mode = "long";
+      longCount++;
       time = longBreak;
     } else {
       mode = "short";
+      shortCount++;
       time = shortBreak;
     }
   } else {
