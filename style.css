@@ -1,7 +1,7 @@
 /* --- LAYOUT --- */
 body {
   font-family: 'Arial', sans-serif;
-  background: #fff5e6; /* cream background */
+  background: #fff5e6; /* cream */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,7 +43,7 @@ h1 {
   border-radius: 12px;
   cursor: pointer;
   background: #fff5e6; /* cream */
-  color: #4b0082;       /* purple text */
+  color: #4b0082;
   font-weight: bold;
   transition: all 0.2s ease;
   box-shadow: 0 4px 10px rgba(0,0,0,0.05);
@@ -96,7 +96,7 @@ h1 {
 }
 
 .buttons button:hover {
-  background: #ffe4ec; /* pink hover */
+  background: #ffe4ec; /* hot pink hover */
 }
 
 /* --- STATS PANEL --- */
