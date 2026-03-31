@@ -13,12 +13,12 @@
     <div class="container">
       <h1>Pomodoro Timer</h1>
 
-      <!-- MODE SELECTOR -->
-      <select id="modeSelect" onchange="changeMode()">
-        <option value="work" selected>Work</option>
-        <option value="short">Short Break</option>
-        <option value="long">Long Break</option>
-      </select>
+      <!-- MODE BUTTONS -->
+      <div class="mode-buttons">
+        <button onclick="changeMode('work')" id="workBtn">Work</button>
+        <button onclick="changeMode('short')" id="shortBtn">Short Break</button>
+        <button onclick="changeMode('long')" id="longBtn">Long Break</button>
+      </div>
 
       <div id="mode">Mode: WORK</div>
       <div id="timer">25:00</div>
@@ -32,17 +32,20 @@
 
     <!-- RIGHT: STATS -->
     <div class="stats">
+      
+      <h2>This Session</h2>
+      <p>🧠 Work: <span id="sessionWork">0</span></p>
+      <p>☕ Short: <span id="sessionShort">0</span></p>
+      <p>🌙 Long: <span id="sessionLong">0</span></p>
+
+      <!-- PRETTY DIVIDER -->
+      <div class="divider"></div>
+
       <h2>Total Stats</h2>
       <p>🧠 Work: <span id="workCount">0</span></p>
       <p>☕ Short: <span id="shortCount">0</span></p>
       <p>🌙 Long: <span id="longCount">0</span></p>
 
-      <hr>
-
-      <h2>This Session</h2>
-      <p>🧠 Work: <span id="sessionWork">0</span></p>
-      <p>☕ Short: <span id="sessionShort">0</span></p>
-      <p>🌙 Long: <span id="sessionLong">0</span></p>
     </div>
 
   </div>
