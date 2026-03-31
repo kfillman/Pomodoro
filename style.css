@@ -50,3 +50,27 @@ button {
 button:hover {
   background: #c71585;
 }
+
+.app {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.stats {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  min-width: 200px;
+}
+
+.stats h2 {
+  color: #ff1493;
+  margin-bottom: 15px;
+}
+
+.stats p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}
