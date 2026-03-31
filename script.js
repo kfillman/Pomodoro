@@ -85,19 +85,32 @@ function resetTimer() {
   updateDisplay();
 }
 
-function changeMode() {
-  const selected = document.getElementById("modeSelect").value;
-
+function changeMode(selectedMode) {
   clearInterval(interval);
   interval = null;
 
-  mode = selected;
+  mode = selectedMode;
 
   if (mode === "work") time = workTime;
   if (mode === "short") time = shortBreak;
   if (mode === "long") time = longBreak;
 
+  updateActiveButton();
   updateDisplay();
+}
+
+function updateActiveButton() {
+  document.getElementById("workBtn").classList.remove("active");
+  document.getElementById("shortBtn").classList.remove("active");
+  document.getElementById("longBtn").classList.remove("active");
+
+  if (mode === "work") {
+    document.getElementById("workBtn").classList.add("active");
+  } else if (mode === "short") {
+    document.getElementById("shortBtn").classList.add("active");
+  } else {
+    document.getElementById("longBtn").classList.add("active");
+  }
 }
 
 function handleCounts() {
