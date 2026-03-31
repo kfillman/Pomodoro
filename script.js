@@ -7,14 +7,13 @@ let time = workTime;
 let interval = null;
 let mode = "work"; // current mode
 
-// --------------------- SESSION SEQUENCE ---------------------
-// Standard Pomodoro cycle: work, short, work, short, work, long
+// --------------------- POMODORO SEQUENCE ---------------------
 const pomodoroSequence = ["work", "short", "work", "short", "work", "long"];
-let sessionIndex = 0; // track position in sequence
+let sessionIndex = 0; // tracks position in current Pomodoro session
 
 // --------------------- STATS ---------------------
-let workCount = 0, shortCount = 0, longCount = 0;
-let sessionWork = 0, sessionShort = 0, sessionLong = 0;
+let workCount = 0, shortCount = 0, longCount = 0; // total stats
+let sessionWork = 0, sessionShort = 0, sessionLong = 0; // current Pomodoro session
 
 // --------------------- AUDIO ---------------------
 const alarm = new Audio("alarm.mp3");
@@ -28,9 +27,11 @@ function updateDisplay() {
     `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
   
   document.getElementById("mode").textContent = `Mode: ${mode.toUpperCase()}`;
-  
-  // Update Next Mode indicator
-  document.getElementById("nextMode").textContent = `Next: ${pomodoroSequence[(sessionIndex + 1) % pomodoroSequence.length].toUpperCase()}`;
+
+  // Dynamic Next Mode indicator
+  const nextIndex = (sessionIndex + 1) % pomodoroSequence.length;
+  document.getElementById("nextMode").textContent = 
+    `Next: ${pomodoroSequence[nextIndex].toUpperCase()}`;
 
   // Total stats
   document.getElementById("workCount").textContent = workCount;
@@ -58,7 +59,7 @@ function startTimer() {
       alarm.play();
       handleCounts();
       nextSession();
-      startTimer(); // auto-start next
+      startTimer(); // auto-start next session
     }
   }, 1000);
 }
@@ -76,11 +77,11 @@ function resetTimer() {
   mode = pomodoroSequence[sessionIndex];
   time = getTimeForMode(mode);
 
-  // reset stats
+  // Reset all stats
   workCount = shortCount = longCount = 0;
   sessionWork = sessionShort = sessionLong = 0;
 
-  updateActiveButton(); // highlight initial mode
+  updateActiveButton();
   updateDisplay();
 }
 
@@ -102,20 +103,18 @@ function changeMode(selectedMode) {
   mode = selectedMode;
   time = getTimeForMode(mode);
 
-  // Update sessionIndex to match selected mode
+  // Update sessionIndex to match selected mode in sequence
   sessionIndex = pomodoroSequence.findIndex(m => m === mode);
 
-  updateActiveButton(); // highlight selected mode
+  updateActiveButton();
   updateDisplay();
 }
 
 function updateActiveButton() {
-  // Remove active class from all buttons
   document.getElementById("workBtn").classList.remove("active");
   document.getElementById("shortBtn").classList.remove("active");
   document.getElementById("longBtn").classList.remove("active");
 
-  // Add active class to the button that matches the current mode
   if (mode === "work") document.getElementById("workBtn").classList.add("active");
   else if (mode === "short") document.getElementById("shortBtn").classList.add("active");
   else if (mode === "long") document.getElementById("longBtn").classList.add("active");
@@ -123,12 +122,20 @@ function updateActiveButton() {
 
 // --------------------- COUNTS ---------------------
 function handleCounts() {
-  if (mode === "work") { workCount++; sessionWork++; }
-  else if (mode === "short") { shortCount++; sessionShort++; }
-  else { 
-    longCount++; sessionLong++;
-    // Reset this session stats after long break
-    sessionWork = sessionShort = sessionLong = 0;
+  // Update total stats
+  if (mode === "work") workCount++;
+  else if (mode === "short") shortCount++;
+  else longCount++;
+
+  // Update This Session stats
+  if (mode === "work") sessionWork++;
+  else if (mode === "short") sessionShort++;
+  else {
+    sessionLong++;
+    // Reset This Session stats after long break
+    sessionWork = 0;
+    sessionShort = 0;
+    sessionLong = 0;
   }
 }
 
@@ -138,7 +145,7 @@ function nextSession() {
   mode = pomodoroSequence[sessionIndex];
   time = getTimeForMode(mode);
 
-  updateActiveButton(); // highlight current mode button
+  updateActiveButton();
   updateDisplay();
 }
 
