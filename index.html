@@ -7,31 +7,32 @@
 </head>
 <body>
 
-  <div class="container">
-    <h1>Pomodoro Timer</h1>
+  <div class="app">
     
-    <div id="timer">25:00</div>
+    <!-- LEFT: TIMER -->
+    <div class="container">
+      <h1>Pomodoro Timer</h1>
 
-    <div class="buttons">
-      <button onclick="startTimer()">Start</button>
-      <button onclick="pauseTimer()">Pause</button>
-      <button onclick="resetTimer()">Reset</button>
+      <div id="mode">Mode: WORK</div>
+      <div id="timer">25:00</div>
+
+      <div class="buttons">
+        <button onclick="startTimer()">Start</button>
+        <button onclick="pauseTimer()">Pause</button>
+        <button onclick="resetTimer()">Reset</button>
+      </div>
     </div>
+
+    <!-- RIGHT: STATS PANEL -->
+    <div class="stats">
+      <h2>Stats</h2>
+
+      <p>🧠 Work Sessions: <span id="workCount">0</span></p>
+      <p>☕ Short Breaks: <span id="shortCount">0</span></p>
+      <p>🌙 Long Breaks: <span id="longCount">0</span></p>
+    </div>
+
   </div>
-
-  <div class="container">
-  <h1>Pomodoro Timer</h1>
-
-  <div id="mode">Mode: WORK</div>
-  <div id="timer">25:00</div>
-  <div id="sessions">Sessions: 0</div>
-
-  <div class="buttons">
-    <button onclick="startTimer()">Start</button>
-    <button onclick="pauseTimer()">Pause</button>
-    <button onclick="resetTimer()">Reset</button>
-  </div>
-</div>
 
   <script src="script.js"></script>
 </body>
